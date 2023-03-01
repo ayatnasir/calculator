@@ -1,6 +1,5 @@
-const calculator = document.querySelector(".calculator")
-const keys = calculator.querySelector(".calculator-keys")
-const display = document.querySelector('.calculator-display')
+// NOTE: 
+// This is the final source code file for a blog post "How to build a calculator". You can follow the lesson at https://zellwk.com/blog/calculator-part-1
 
 const calculate = (n1, operator, n2) => {
   let result = ''
@@ -17,61 +16,58 @@ const calculate = (n1, operator, n2) => {
   return result
 }
 
-keys.addEventListener("click", e => {
- if (e.target.matches('button')) {
+const calculator = document.querySelector('.calculator')
+const display = calculator.querySelector('.calculator-display')
+const keys = calculator.querySelector('.calculator-keys')
+
+keys.addEventListener('click', e => {
+  if (e.target.matches('button')) {
     const key = e.target
     const action = key.dataset.action
     const keyContent = key.textContent
     const displayedNum = display.textContent
+    const previousKeyType = calculator.dataset.previousKeyType
 
-   if (!action) {
+    // Array.from(key.parentNode.children)
+    //   .forEach(k => k.classList.remove('is-depressed'))
+
+    if (!action) {
       if (displayedNum === '0' || previousKeyType === 'operator') {
         display.textContent = keyContent
       } else {
         display.textContent = displayedNum + keyContent
       }
     }
-        if (
-        action === 'add' ||
-        action === 'subtract' ||
-        action === 'multiply' ||
-        action === 'divide'
-      ) {
-        console.log('operator key!')
-        calculator.dataset.firstValue = displayedNum
-        calculator.dataset.operator = action
-      }
 
-      if (action === 'decimal') {
-        console.log('decimal key!')
-        display.textContent = displayedNum + '.'
-      }
-      
-      if (action === 'clear') {
-        console.log('clear key!')
-        display.textContent = '0'
-      }
-      
-    if( action === "negative") {
-    console.log("negative")
-    display.textContent = displayedNum * -1;
+    if (action === 'decimal') {
+      display.textContent = displayedNum + '.'
     }
 
-    if (action === "percentage") {
-    console.log("percentage")
-    display.textContent = displayedNum / 100;
+    if (
+      action === 'add' ||
+      action === 'subtract' ||
+      action === 'multiply' ||
+      action === 'divide'
+    ) {
+      key.classList.add('is-depressed')
+      calculator.dataset.previousKeyType = 'operator'
+      calculator.dataset.firstValue = displayedNum
+      calculator.dataset.operator = action
     }
 
+    if (action === 'clear') {
+      console.log('clear key!')
+    }
+    
+    if(action === 'negative'){
+  display.textContent = displayedNum * -1
+}
     if (action === 'calculate') {
-        console.log('equal key!')
-        const firstValue = calculator.dataset.firstValue
-        const operator = calculator.dataset.operator
-        const secondValue = displayedNum
-        
-        display.textContent = calculate(firstValue, operator, secondValue)
-      }
+      const firstValue = calculator.dataset.firstValue
+      const operator = calculator.dataset.operator
+      const secondValue = displayedNum
 
-
-
- }
+      display.textContent = calculate(firstValue, operator, secondValue)
+    }
+  }
 })
